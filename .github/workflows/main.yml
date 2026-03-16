@@ -1,0 +1,52 @@
+name: Build Kade Engine
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-html5:
+    runs-on: ubuntu-latest # HTML5 can build on any platform
+    steps:
+      # ... (steps for html5 build below)
+
+  build-windows:
+    runs-on: windows-latest # Windows builds require a Windows runner
+    steps:
+      # ... (steps for windows build below)
+      
+      - name: Checkout repository
+       uses: actions/checkout@v4
+       
+      - name: Setup Haxe
+       uses: krdlab/setup-haxe@v1
+         with:
+             haxe-version: 4.1.5
+             
+       - name: Install Haxelibs
+          run: |
+          haxelib install lime 7.9.0
+          haxelib install openfl
+          # ... add all other necessary haxelib install     commands
+          haxelib run lime setup
+          # ... add all other necessary haxelib run        commands and git installs
+          
+         - name: Build project (HTML5 example)
+            run: lime build html5
+            
+         - name: Build project (Windows example)
+            run: lime build windows
+            
+         - name: Upload Artifact
+           uses: actions/upload-artifact@v4
+           with:
+           name: KadeEngine-HTML5-Build
+           path: export/release/html5/bin
+
+
+
+ 
+
+       
+       
